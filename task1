@@ -1,1 +1,43 @@
+int segPins[7] = {2, 3, 4, 5, 6, 7, 8}; // A, B, C, D, E, F, G
+int buttonPin = 9; // Push button pin
+int counter = 0; // Count variable (0 to 9)
+bool lastButtonState = LOW; // Previous state of button
+// 7-segment digit patterns for 0-9
+// {A, B, C, D, E, F, G}
+byte digits[10][7] = {
+{1, 1, 1, 1, 1, 1, 0}, // 0
+{0, 1, 1, 0, 0, 0, 0}, // 1
+{1, 1, 0, 1, 1, 0, 1}, // 2
+{1, 1, 1, 1, 0, 0, 1}, // 3
+{0, 1, 1, 0, 0, 1, 1}, // 4
+{1, 0, 1, 1, 0, 1, 1}, // 5
+{1, 0, 1, 1, 1, 1, 1}, // 6
+{1, 1, 1, 0, 0, 0, 0}, // 7
+{1, 1, 1, 1, 1, 1, 1}, // 8
+{1, 1, 1, 1, 0, 1, 1} // 9
+};
+void setup() {
+// Set segment pins as outputs
+for (int i = 0; i < 7; i++) {
+pinMode(segPins[i], OUTPUT);
+}
+// Set button pin as input
+pinMode(buttonPin, INPUT);
+}
+void loop() {
+bool currentButtonState = digitalRead(buttonPin);
+// Detect button press (rising edge)
+if (currentButtonState == HIGH && lastButtonState == LOW) {
+counter = (counter + 1) % 10; // Cycle from 0 to 9
+showDigit(counter);
+delay(200); // Debounce delay
+}
+lastButtonState = currentButtonState;
+}
+// Function to display digit on 7-segment
+void showDigit(int num) {
+for (int i = 0; i < 7; i++) {
+digitalWrite(segPins[i], digits[num][i]);
+}
+}
 
